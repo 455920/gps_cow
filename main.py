@@ -1,3 +1,4 @@
+# -*- coding=utf-8 -*-
 # 1.导入模块
 import socket
 import threading
@@ -12,6 +13,7 @@ longitude = '' # 经度
 latitude = '' # 纬度
 
 # 储存参数的数组
+# 0温度 1心率 2 脉搏  3东西  4 南北  5经度 6纬度
 arrs = []
 
 def recv_msg(new_tcp_socket, ip_port):
