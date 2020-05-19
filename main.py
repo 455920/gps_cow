@@ -44,12 +44,14 @@ def recv_msg(new_tcp_socket, ip_port):
 
             # 请求不合法
             if len(req) < 1:
+                print('req params error')
                 break
             method = req[0]
 
             if method == 'get': # 请求格式 get:id
                 # 请求不合法
                 if len(req) != 2:
+                    print('get params error')
                     break
 
                 if req[1] in cows_data.keys(): # 判断id是否对应有数据
@@ -62,12 +64,14 @@ def recv_msg(new_tcp_socket, ip_port):
             elif method == 'set':
                 # 请求不合法
                 if len(req) != 3:
+                    print('set params error')
                     break
 
                 cow_data = req[2].split(',')
                 cow_data.append(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                 cows_data[req[1]] = cow_data
             else: # 方法错误
+                print('method params error')
                 break
 
             # recv_text = recv_data.decode('gbk')
