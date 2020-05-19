@@ -71,6 +71,7 @@ def recv_msg(new_tcp_socket, ip_port):
             # recv_text = recv_data.decode('gbk')
             print(str(ip_port), recv_text_utf8)
         else:
+            print("recv_data error")
             break
     # 关闭客户端连接
     print('a client quit')
