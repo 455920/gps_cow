@@ -73,6 +73,7 @@ def recv_msg(new_tcp_socket, ip_port):
         else:
             break
     # 关闭客户端连接
+    print('a client quit')
     new_tcp_socket.close()
 
 
