@@ -16,6 +16,7 @@ cows_data = {}
 
 def recv_msg(new_tcp_socket, ip_port):
     global arrs
+    recv_data = ''
     """
     接受信息的函数
     :return:
@@ -23,7 +24,11 @@ def recv_msg(new_tcp_socket, ip_port):
     # 这个while可以不间断的接收客户端信息
     while True:
         # 7.接受客户端发送的信息
-        recv_data = new_tcp_socket.recv(1024)
+        ch = new_tcp_socket.recv(1)
+        if ch != b'*':
+            recv_data += ch.decode('utf8')
+            continue
+
         if recv_data:
             # 8.解码数据并输出
             res_dict = {
@@ -31,7 +36,7 @@ def recv_msg(new_tcp_socket, ip_port):
                 "cow_data": ''
             }
 
-            recv_text_utf8 = recv_data.decode('utf8')
+            recv_text_utf8 = recv_data
 
             req = recv_text_utf8.split(':')
 
@@ -70,6 +75,8 @@ def recv_msg(new_tcp_socket, ip_port):
 
             # recv_text = recv_data.decode('gbk')
             print(str(ip_port), recv_text_utf8)
+
+            recv_data = ''
         else:
             print("recv_data error")
             break
