@@ -3,6 +3,7 @@
 import socket
 import threading
 import json
+import datetime
 
 temperature = ''
 heart_rate = ''
@@ -14,7 +15,10 @@ latitude = '' # 纬度
 
 # 储存参数的数组
 # 0温度 1心率 2 脉搏  3东西  4 南北  5经度 6纬度
-arrs = []
+
+# 储存牛的数据
+# key:id  value: 生命体征
+cows_data = {}
 
 def recv_msg(new_tcp_socket, ip_port):
     global arrs
@@ -30,26 +34,47 @@ def recv_msg(new_tcp_socket, ip_port):
             # 8.解码数据并输出
             res_dict = {
                 "code": "0",
-                "arrs": ''
+                "cow_data": ''
             }
 
-            if recv_data == b'get':
-               if len(arrs) == 0:
-                   res_dict["code"] = "-1"
-               else:
-                   res_dict["arrs"] = arrs
-               new_tcp_socket.sendall(json.dumps(res_dict).encode('utf8'))
-            else:
-                recv_text_utf8 = recv_data.decode('utf8')
-                arrs = recv_text_utf8.split(',')
+            recv_text_utf8 = recv_data.decode('utf8')
+
+            req = recv_text_utf8.split(':')
 
 
-            recv_text = recv_data.decode('gbk')
-            print('来自[%s]的信息：%s' % (str(ip_port), recv_text))
+            # 请求不合法
+            if len(req) < 1:
+                break
+            method = req[0]
+
+            if method == 'get': # 请求格式 get:id
+                # 请求不合法
+                if len(req) != 2:
+                    break
+
+                if req[1] in cows_data.keys(): # 判断id是否对应有数据
+                    res_dict["cow_data"] = cows_data[req[1]]
+                else:
+                    res_dict["code"] = "-1" # 表示该牛不存在
+                    res_dict["cow_data"] = []
+                new_tcp_socket.sendall(json.dumps(res_dict).encode('utf8'))
+
+            elif method == 'set':
+                # 请求不合法
+                if len(req) != 3:
+                    break
+
+                cow_data = req[2].split(',')
+                cow_data.append(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+                cows_data[req[1]] = cow_data
+            else: # 方法错误
+                break
+
+            # recv_text = recv_data.decode('gbk')
+            # print('来自[%s]的信息：%s' % (str(ip_port), recv_text))
         else:
             break
     # 关闭客户端连接
-    print('退出[%s]' % (str(ip_port)))
     new_tcp_socket.close()
 
 
