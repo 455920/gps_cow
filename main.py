@@ -5,16 +5,10 @@ import threading
 import json
 import datetime
 
-temperature = ''
-heart_rate = ''
-pulse = ''
-EW = ''# 东西
-SN = '' # 南北
-longitude = '' # 经度
-latitude = '' # 纬度
+
 
 # 储存参数的数组
-# 0温度 1心率 2 脉搏  3东西  4 南北  5经度 6纬度
+# 0温度 1心率 2 脉搏  3经度 4纬度 5时间
 
 # 储存牛的数据
 # key:id  value: 生命体征
