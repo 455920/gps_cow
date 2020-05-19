@@ -69,7 +69,7 @@ def recv_msg(new_tcp_socket, ip_port):
                 break
 
             # recv_text = recv_data.decode('gbk')
-            print('来自[%s]的信息：%s' % (str(ip_port), recv_text_utf8))
+            print(str(ip_port), recv_text_utf8)
         else:
             break
     # 关闭客户端连接
